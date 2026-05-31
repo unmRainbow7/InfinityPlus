@@ -155,14 +155,3 @@ export default class InfinityPlus {
         return this.number
     }
 }
-let num = new InfinityPlus(2.7,90)
-await num.round() 
-console.log(num.number) // 2e90
-
-let num2 = new InfinityPlus(6.2, 34)
-await num2.round() 
-console.log(num2.number) // 7e34
-
-let num3 = new InfinityPlus(5.5, 22)
-num3.round() 
-console.log(num3.number) // 6e22
