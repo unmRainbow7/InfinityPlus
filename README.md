@@ -1,5 +1,17 @@
 # InfinityPlus
 A simple big number library that shouldnt be hard to understand.
+You can access the npm package of InfinityPlus [here](https://www.npmjs.com/package/infinityplus), sometimes this library is abbreviated to IP(InfinityPlus)
+## Features
+1. Number storage beyond 1.79e308
+2. Big number calculations
+3. Scientific Notation
+4. Browser Safe operations (async)
+5. Simple and readable
+6. Extends number limit from 1.79e308 -> 1e1e308
+## Downsides
+1. Slow(still fast enough to be used but slower than other Big number libraries)
+2. Async/await everywhere(without this, performance can slow down and you can get inconsistent results)
+3. A little less accuracy
 ## Documentation
 I shall teach you how to use InfinityPlus, but first:
 ## How to install
@@ -19,7 +31,21 @@ Once you do this you can do:
 ```js
 console.log(variable.mantissa) // to see mantissa
 console.log(variable.exponent) // to see exponent
+console.log(variable.precision) // to see currrent decimal places of precision you can see
 console.log(variable.number) // to see the full number, you can also use console.log(variable.seeNumber())
+```
+### InfinityPlus constructor defaults
+The constructor has defaults for mantissa, exponent and precision, these are:
+```js
+let num = new InfinityPlus()
+console.log(num.mantissa) // 1, default is 1
+console.log(num.exponent) // 0, default is 0
+console.log(num.number) // 1.00e0, default is 1.00e0(which equals 1)
+console.log(num.precision) // 2, default you can see is 2 dp
+```
+**NOTE:** ___.precision is purely visual based and has no effect on operations in InfinityPlus.___,thats why for all the examples i didnt put .00, also the precision property isnt defined in the rest of these examples for clarity
+```js
+let num = new InfinityPlus(1,7,4) // a full IP constructor(mantissa,exponent,precision)
 ```
 # InfinityPlus methods
 ## .fix()
@@ -192,19 +218,48 @@ console.log(num3.number) // 6e22
 ## .seeNumber()
 ```js
 let num = new InfinityPlus(3,7832)
-number = num.seeNumber()
+const number = num.seeNumber()
 console.log(number) // 3e7832
 ```
 seeNumber() returns the value of the .number property.
 ## .toNumber()
 ```js
 let num = new InfinityPlus(3,90)
-number = num.toNumber()
+const number = num.toNumber()
 console.log(number) // 3e+90
 ```
 .toNumber() turns an InfinityPlus number into the native js Number type if the InfinityPlus number is less than 1.79e308. If the number is higher than 1.79e308, .toNumber() returns null because converting would give Infinity, use .seeNumber() or .number to see numbers beyond infinity
+## .numberToIP(number) (static)
+**IMPORTANT: THIS IS A STATIC METHOD**, you call them via `className.Method`, for infinityPlus:
+```js
+InfinityPlus.numberToIP(number)
+```
+.numberToIP() is short for .numberToInfinityPlus(). This method takes a js Number and turns it into an InfinityPlus class instance, if the js number is above js Infinity, it makes an instance with:
+```js
+let a = InfinityPlus.numberToIP(1e400)
+console.log(a.number) // 1e308
+// mantissa is 1 and exponent is 308
+```
+example of .numberToIP():
+```js
+let num = InfinityPlus.numberToIP(1e20)
+// num is now an Instance of InfinityPlus
+```
+## .clone()
+```js
+let num = new InfinityPlus(1,450)
+let copy = num.clone()
+await copy.add(1,450)
+console.log(num.number) // 1e450
+console.log(copy.number) // 2e450
+```
+.clone() uses an InfinityPlus instance to create a new InfinityPlus instance with the same values without affecting the original instance.
 # Things to note
 - Since the Constructor takes 2 arguments, **every InfinityPlus number must be created in scientific notation**, use .toNumber() to convert it if its below 1.79e308.
 - You can't chain operations because of returning a result or an array
 - Don't forget to use await for all async operations for consistency
 - All methods except .log10(), .ln(), .log2(), .lessThan(), .greaterThan(), .equalTo(), .toNumber() and .seeNumber() automatically use .fix() and .rfix() so there is so need to use .fix() and .rfix() again
+- This is a slow but browser safe library because of async
+- if you create a function that contains any infinityplus async method, the function must be async and be called with await
+- **if you want speed, go to [Break Infinity.js](https://github.com/Patashu/break_infinity.js/), for precision, go to [Decimal.js](https://github.com/MikeMcl/decimal.js) and for browser safe async operations, try out this library(infinityplus)**
+- If you didnt notice already, all async methods only need to be called to do their calculations
