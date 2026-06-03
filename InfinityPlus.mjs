@@ -1,15 +1,16 @@
 export default class InfinityPlus {
-    constructor(mantissa = 1, exponent = 0) {
+    constructor(mantissa = 1, exponent = 0, precision = 2) {
         this.mantissa = mantissa
         this.exponent = exponent
-        this.number = `${mantissa.toFixed(2)}e${exponent}`
+        this.precision = precision
+        this.number = `${mantissa.toFixed(precision)}e${exponent}`
         this.abs()
         this.fix()
         this.rfix()
     }
     update() {
-        if (this.exponent <= 999999) {this.number = `${this.mantissa.toFixed(2)}e${this.exponent}`}
-        else {this.number = `${this.mantissa.toFixed(2)}e${this.exponent.toExponential(0).replace("e+", "e")}`}
+        if (this.exponent <= 999999) {this.number = `${this.mantissa.toFixed(this.precision)}e${this.exponent}`}
+        else {this.number = `${this.mantissa.toFixed(this.precision)}e${this.exponent.toExponential(0).replace("e+", "e")}`}
     }
     fix() {
         return new Promise((resolve, reject) => {
@@ -153,5 +154,14 @@ export default class InfinityPlus {
     }
     seeNumber() {
         return this.number
+    }
+    static numberToIP(number, precision = 2) {
+        if (!isFinite(number)) {return new InfinityPlus(1,308, precision)}
+        let exp = Math.floor(Math.log10(number))
+        let mant = (number / 10**exp)
+        return new InfinityPlus(mant, exp, precision)
+    }
+    clone() {
+        return new InfinityPlus(this.mantissa, this.exponent, this.precision)
     }
 }
